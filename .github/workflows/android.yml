@@ -17,24 +17,17 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      # Chaquopy برای نصب numpy/opencv به پایتون روی ماشین ساخت نیاز دارد
+      # هم‌نسخه با Chaquopy (version = "3.10" در build.gradle.kts)
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.10"
 
-      # Android SDK روی ماشین ubuntu-latest از قبل نصب است (ANDROID_HOME)؛ فقط مجوزها را می‌پذیریم
       - name: Accept Android SDK licenses
         run: |
           echo "ANDROID_HOME=$ANDROID_HOME"
           SM=$(find "$ANDROID_HOME/cmdline-tools" -name sdkmanager -type f 2>/dev/null | head -1)
           echo "sdkmanager: $SM"
           if [ -n "$SM" ]; then yes | "$SM" --licenses > /dev/null || true; fi
-
-      # جدید: نسخه‌های opencv که Chaquopy برای اندروید دارد را در لاگ چاپ می‌کند
-      - name: List Chaquopy OpenCV wheels
-        run: |
-          curl -fsSL https://chaquo.com/pypi-13.1/opencv-python-headless/ \
-            | grep -oE 'opencv_python_headless[^"<]*arm64_v8a\.whl' | sort -u || true
 
       - uses: gradle/actions/setup-gradle@v4
         with:
