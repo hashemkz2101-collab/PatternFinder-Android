@@ -22,7 +22,13 @@ jobs:
         with:
           python-version: "3.11"
 
-      - uses: android-actions/setup-android@v3
+      # Android SDK روی ماشین ubuntu-latest از قبل نصب است (ANDROID_HOME)؛ فقط مجوزها را می‌پذیریم
+      - name: Accept Android SDK licenses
+        run: |
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          SM=$(find "$ANDROID_HOME/cmdline-tools" -name sdkmanager -type f 2>/dev/null | head -1)
+          echo "sdkmanager: $SM"
+          if [ -n "$SM" ]; then yes | "$SM" --licenses > /dev/null || true; fi
 
       - uses: gradle/actions/setup-gradle@v4
         with:
