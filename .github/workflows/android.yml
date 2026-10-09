@@ -30,6 +30,12 @@ jobs:
           echo "sdkmanager: $SM"
           if [ -n "$SM" ]; then yes | "$SM" --licenses > /dev/null || true; fi
 
+      # جدید: نسخه‌های opencv که Chaquopy برای اندروید دارد را در لاگ چاپ می‌کند
+      - name: List Chaquopy OpenCV wheels
+        run: |
+          curl -fsSL https://chaquo.com/pypi-13.1/opencv-python-headless/ \
+            | grep -oE 'opencv_python_headless[^"<]*arm64_v8a\.whl' | sort -u || true
+
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: "8.7"
