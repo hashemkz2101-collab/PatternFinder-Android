@@ -35,9 +35,12 @@ chaquopy {
     defaultConfig {
         version = "3.11"
         pip {
-            install("numpy")
-            install("opencv-python-headless")
-            install("Pillow")
+            // فقط wheel آماده بپذیر؛ هرگز تلاش برای کامپایل سورس نکن (Chaquopy کامپایلر ندارد)
+            options("--only-binary", ":all:")
+            install("numpy==1.26.2")
+            // opencv 5.x برای اندروید wheel ندارد؛ pip بالاترین 4.x ای را که wheel دارد انتخاب می‌کند
+            install("opencv-python-headless<5")
+            install("Pillow==11.0.0")
         }
     }
 }
