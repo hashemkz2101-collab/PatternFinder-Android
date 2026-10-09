@@ -1,10 +1,9 @@
-name: Build APK from zip
+name: Build APK
 
-# برای وقتی که فقط فایل PatternFinder-Android.zip را (از گوشی) در ریشهٔ مخزن آپلود کرده‌اید.
 on:
-  workflow_dispatch:
   push:
-    paths: ["PatternFinder-Android.zip"]
+    branches: [main, master]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -13,19 +12,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Unzip project
-        id: find
-        run: |
-          unzip -q PatternFinder-Android.zip -d src_unzipped
-          DIR=$(dirname "$(find src_unzipped -name settings.gradle.kts | head -1)")
-          echo "dir=$DIR" >> "$GITHUB_OUTPUT"
-          echo "Project dir: $DIR"
-
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: "17"
 
+      # Chaquopy برای نصب numpy/opencv به پایتون روی ماشین ساخت نیاز دارد
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
@@ -37,11 +29,10 @@ jobs:
           gradle-version: "8.7"
 
       - name: Build debug APK
-        working-directory: ${{ steps.find.outputs.dir }}
         run: gradle assembleDebug --no-daemon --stacktrace
 
       - uses: actions/upload-artifact@v4
         with:
           name: PatternFinder-APK
-          path: ${{ steps.find.outputs.dir }}/app/build/outputs/apk/debug/*.apk
+          path: app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
