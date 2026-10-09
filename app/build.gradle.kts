@@ -33,13 +33,13 @@ android {
 
 chaquopy {
     defaultConfig {
-        version = "3.11"
+        // مخزن Chaquopy فقط برای پایتون 3.8 و 3.10 نسخهٔ opencv دارد (برای 3.11 ندارد)
+        version = "3.10"
         pip {
             // فقط wheel آماده بپذیر؛ هرگز تلاش برای کامپایل سورس نکن (Chaquopy کامپایلر ندارد)
             options("--only-binary", ":all:")
             install("numpy==1.26.2")
-            // opencv 5.x برای اندروید wheel ندارد؛ pip بالاترین 4.x ای را که wheel دارد انتخاب می‌کند
-            install("opencv-python-headless<5")
+            install("opencv-python-headless==4.5.1.48")
             install("Pillow==11.0.0")
         }
     }
